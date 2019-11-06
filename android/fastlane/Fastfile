@@ -12,6 +12,10 @@
 default_platform(:android)
 
 platform :android do
+  lane :test do
+    gradle(task: "test")
+  end 
+  
   lane :beta do
     gradle(
       task: "assembleRelease",
