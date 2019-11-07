@@ -14,8 +14,17 @@ default_platform(:android)
 platform :android do
   lane :test do
     gradle(task: "test")
-  end 
-  
+  end
+  lane :assemble do
+    gradle(task: "assemble")
+
+    sign_apk(
+      keystore_path: "${HOME}/keyvault/android.jks",
+      alias: "android-fastlane-example",
+      storepass: options[:storepass],
+      tsa: "http://timestamp.comodoca.com/rfc316",
+    )
+  end
   lane :beta do
     gradle(
       task: "assembleRelease",
