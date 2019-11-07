@@ -15,7 +15,9 @@ platform :android do
   lane :test do
     gradle(task: "test")
   end
-  lane :assemble do |options|
+  lane :alpha do |options|
+    gradle(task: "clean")
+
     gradle(task: "assemble")
 
     sign_apk(
@@ -24,6 +26,15 @@ platform :android do
       storepass: options[:storepass],
       tsa: "http://timestamp.comodoca.com/rfc316",
     )
+
+
+    zipalign(apk_path: "#{lane_context[SharedValues::SIGNED_APK_PATH]}")
+    gradle(task: "test")
+
+  supply(
+     track: 'alpha',
+     apk: "#{lane_context[SharedValues::SIGNED_APK_PATH]}"
+   )
   end
   lane :beta do
     gradle(
